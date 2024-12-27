@@ -52,7 +52,7 @@ PYBIND11_MODULE(pybinding, m) {
         .def("get_allowed_rotations", &Item::getAllowedRotations)
         .def("get_rotation_type", &Item::getRotationType)
         .def("set_rotation_type", &Item::setRotationType)
-        .def("get_position", &Item::getPosition)
+        .def("get_position", &Item::getPosition, py::return_value_policy::reference)
         .def("set_position", &Item::setPosition)
         .def("get_rotation_type_string", &Item::getRotationTypeString)
         .def("get_dimension", &Item::getDimension)

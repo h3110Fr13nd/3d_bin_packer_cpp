@@ -16,7 +16,7 @@ Item::Item(const std::string& name, float w, float h, float d,
       } : allowed_rotations),
       _rotation_type(_allowed_rotations[0]),
       color(color.empty() ? "#000000" : color) {
-    _position = {0, 0, 0};
+    _position = std::vector<float>{0.0f, 0.0f, 0.0f};
 }
 
 const std::vector<RotationType>& Item::getAllowedRotations() const {
@@ -32,7 +32,7 @@ void Item::setRotationType(RotationType type) {
 }
 
 const std::vector<float>& Item::getPosition() const {
-    return _position;
+    return std::ref(_position);
 }
 
 void Item::setPosition(const std::vector<float>& position) {
@@ -70,9 +70,6 @@ bool rectIntersect(const Item& item1, const Item& item2, Axis x, Axis y) {
 
     size_t xIndex = axisToIndex(x);
     size_t yIndex = axisToIndex(y);
-    std::cout << "xIndex: " << xIndex << ", yIndex: " << yIndex << ", p1[xIndex]: " << p1[xIndex] 
-              << ", d1[xIndex]: " << d1[xIndex] << ", p2[xIndex]: " << p2[xIndex] 
-              << ", d2[xIndex]: " << d2[xIndex] << std::endl;
     // Calculate center points using position and dimensions
     float cx1 = p1[xIndex] + d1[xIndex] / 2;
     float cy1 = p1[yIndex] + d1[yIndex] / 2;
@@ -93,10 +90,6 @@ bool Item::doesIntersect(const Item& other) const {
     bool xy = rectIntersect(*this, other, Axis::width, Axis::height);
     bool yz = rectIntersect(*this, other, Axis::height, Axis::depth);
     bool xz = rectIntersect(*this, other, Axis::width, Axis::depth);
-    std::cout << "Checking intersection between " << *this << " and " << other << std::endl;
-    std::cout << "Width x Height: " << rectIntersect(*this, other, Axis::width, Axis::height) << std::endl;
-    std::cout << "Height x Depth: " << rectIntersect(*this, other, Axis::height, Axis::depth) << std::endl;
-    std::cout << "Width x Depth: " << rectIntersect(*this, other, Axis::width, Axis::depth) << std::endl;
     return xy && yz && xz;
 }
 

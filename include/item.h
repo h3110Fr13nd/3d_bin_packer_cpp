@@ -59,6 +59,8 @@ public:
 
     std::string getRotationTypeString() const;
     std::vector<float> getDimension() const;
+    std::vector<float> getPos() const;
+
     bool doesIntersect(const Item& other) const;
 
     bool operator==(const Item& other) const;
