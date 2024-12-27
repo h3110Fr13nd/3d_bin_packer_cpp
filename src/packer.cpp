@@ -2,7 +2,7 @@
 #include <algorithm> 
 #include <iostream>
 
-const std::tuple<float, float, float> START_POSITION = {0.0f, 0.0f, 0.0f};
+const std::tuple<long, long, long> START_POSITION = {0.0f, 0.0f, 0.0f};
 
 Packer::Packer() {}
 
@@ -71,17 +71,17 @@ std::vector<Item> Packer::packToBin(Bin& bin, std::vector<Item>& items) {
         for (const auto& axis : {Axis::width, Axis::height, Axis::depth}) {
             if (fitted) break;
             for (const auto& item_b : bin.getItems()) {
-                std::tuple<float, float, float> item_position;
+                std::tuple<long, long, long> item_position;
                 std::cout << "Trying to fit item at position: (" 
-                          << item_b.get().getPosition()[0] << ", " 
-                          << item_b.get().getPosition()[1] << ", " 
-                          << item_b.get().getPosition()[2] << ")" << std::endl;
+                          << std::get<0>(item_b.get().getPosition()) << ", " 
+                          << std::get<1>(item_b.get().getPosition()) << ", " 
+                          << std::get<2>(item_b.get().getPosition()) << ")" << std::endl;
                 if (axis == Axis::width) {
-                    item_position = {item_b.get().getPosition()[0] + item_b.get().getDimension()[0], item_b.get().getPosition()[1], item_b.get().getPosition()[2]};
+                    item_position = {std::get<0>(item_b.get().getPosition()) + item_b.get().getDimension()[0], std::get<1>(item_b.get().getPosition()), std::get<2>(item_b.get().getPosition())};
                 } else if (axis == Axis::depth) {
-                    item_position = {item_b.get().getPosition()[0], item_b.get().getPosition()[1], item_b.get().getPosition()[2] + item_b.get().getDimension()[2]};
+                    item_position = {std::get<0>(item_b.get().getPosition()), std::get<1>(item_b.get().getPosition()), std::get<2>(item_b.get().getPosition()) + item_b.get().getDimension()[2]};
                 } else {
-                    item_position = {item_b.get().getPosition()[0], item_b.get().getPosition()[1] + item_b.get().getDimension()[1], item_b.get().getPosition()[2]};
+                    item_position = {std::get<0>(item_b.get().getPosition()), std::get<1>(item_b.get().getPosition()) + item_b.get().getDimension()[1], std::get<2>(item_b.get().getPosition())};
                 }
                 if (bin.putItem(items[i], item_position)) {
                     fitted = true;

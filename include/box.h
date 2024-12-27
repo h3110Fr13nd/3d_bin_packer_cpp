@@ -5,17 +5,17 @@
 
 class Box {
 public:
-    Box(const std::string& name, float width, float height, float depth);
+    Box(const std::string& name, long width, long height, long depth);
     
     std::string name;
-    float width;
-    float height;
-    float depth;
+    long width;
+    long height;
+    long depth;
     std::string getName() const;
-    float getWidth() const;
-    float getHeight() const;
-    float getDepth() const;
-    float getVolume() const;
+    long getWidth() const;
+    long getHeight() const;
+    long getDepth() const;
+    long getVolume() const;
 
 };
 

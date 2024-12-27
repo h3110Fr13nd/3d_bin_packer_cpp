@@ -11,7 +11,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(pybinding, m) {
     py::class_<Box>(m, "Box")
-        .def(py::init<const std::string&, float, float, float>())
+        .def(py::init<const std::string&, long, long, long>())
         .def("get_name", &Box::getName)
         .def("get_width", &Box::getWidth)
         .def("get_height", &Box::getHeight)
@@ -32,23 +32,23 @@ PYBIND11_MODULE(pybinding, m) {
         .value("depth", Axis::depth);
 
     py::class_<Item, Box>(m, "Item")
-        .def(py::init([](const std::string& name, float w, float h, float d) {
+        .def(py::init([](const std::string& name, long w, long h, long d) {
             return new Item(name, w, h, d);
         }))
-        .def(py::init([](const std::string& name, float w, float h, float d, 
+        .def(py::init([](const std::string& name, long w, long h, long d, 
                         const std::vector<RotationType>& rotations) {
             return new Item(name, w, h, d, rotations);
         }))
-        .def(py::init([](const std::string& name, float w, float h, float d,
+        .def(py::init([](const std::string& name, long w, long h, long d,
                         const std::string& color) {
             return new Item(name, w, h, d, std::vector<RotationType>{}, color);
         }))
-        .def(py::init([](const std::string& name, float w, float h, float d,
+        .def(py::init([](const std::string& name, long w, long h, long d,
                         const std::vector<RotationType>& rotations,
                         const std::string& color) {
             return new Item(name, w, h, d, rotations, color);
         }))
-        .def(py::init<const std::string&, float, float, float, const std::vector<RotationType>&, const std::string&>())
+        .def(py::init<const std::string&, long, long, long, const std::vector<RotationType>&, const std::string&>())
         .def("get_allowed_rotations", &Item::getAllowedRotations)
         .def("get_rotation_type", &Item::getRotationType)
         .def("set_rotation_type", &Item::setRotationType)
@@ -62,10 +62,17 @@ PYBIND11_MODULE(pybinding, m) {
             std::ostringstream oss;
             oss << item;
             return oss.str();
-        });
+        })
+        .def_readwrite("color", &Item::color)
+        .def_readwrite("width", &Item::width)
+        .def_readwrite("height", &Item::height)
+        .def_readwrite("depth", &Item::depth)
+        .def_readwrite("_allowed_rotations", &Item::_allowed_rotations)
+        .def_readwrite("_position", &Item::_position, py::return_value_policy::reference);
+
 
     py::class_<Bin, Box>(m, "Bin")
-        .def(py::init<const std::string&, float, float, float>())
+        .def(py::init<const std::string&, long, long, long>())
         .def("get_items", &Bin::getItems)
         .def("set_items", &Bin::setItems)
         .def("score_rotation", &Bin::scoreRotation)

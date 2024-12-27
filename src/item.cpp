@@ -2,7 +2,7 @@
 #include <iostream>
 
 // Single constructor without default arguments
-Item::Item(const std::string& name, float w, float h, float d,
+Item::Item(const std::string& name, long w, long h, long d,
            const std::vector<RotationType>& allowed_rotations,
            const std::string& color)
     : Box(name, w, h, d),
@@ -16,7 +16,7 @@ Item::Item(const std::string& name, float w, float h, float d,
       } : allowed_rotations),
       _rotation_type(_allowed_rotations[0]),
       color(color.empty() ? "#000000" : color) {
-    _position = std::vector<float>{0.0f, 0.0f, 0.0f};
+    _position = std::tuple<long, long, long>{0, 0, 0};
 }
 
 const std::vector<RotationType>& Item::getAllowedRotations() const {
@@ -31,11 +31,11 @@ void Item::setRotationType(RotationType type) {
     _rotation_type = type;
 }
 
-const std::vector<float>& Item::getPosition() const {
-    return std::ref(_position);
+const std::tuple<long, long, long>& Item::getPosition() const {
+    return _position;
 }
 
-void Item::setPosition(const std::vector<float>& position) {
+void Item::setPosition(const std::tuple<long, long, long>& position) {
     _position = position;
 }
 
@@ -43,7 +43,7 @@ std::string Item::getRotationTypeString() const {
     return ROTATION_TYPE_STRINGS.at(_rotation_type);
 }
 
-std::vector<float> Item::getDimension() const {
+std::vector<long> Item::getDimension() const {
     switch (_rotation_type) {
         case RotationType::whd:
             return {width, height, depth};
@@ -62,27 +62,37 @@ std::vector<float> Item::getDimension() const {
     }
 }
 
-bool rectIntersect(const Item& item1, const Item& item2, Axis x, Axis y) {
+template <size_t X, size_t Y>
+bool rectIntersectImpl(const Item& item1, const Item& item2) {
     const auto& d1 = item1.getDimension();
     const auto& d2 = item2.getDimension();
     const auto& p1 = item1.getPosition();
     const auto& p2 = item2.getPosition();
 
-    size_t xIndex = axisToIndex(x);
-    size_t yIndex = axisToIndex(y);
     // Calculate center points using position and dimensions
-    float cx1 = p1[xIndex] + d1[xIndex] / 2;
-    float cy1 = p1[yIndex] + d1[yIndex] / 2;
-    float cx2 = p2[xIndex] + d2[xIndex] / 2;
-    float cy2 = p2[yIndex] + d2[yIndex] / 2;
+    float cx1 = std::get<X>(p1) + d1[X] / 2.0f;
+    float cy1 = std::get<Y>(p1) + d1[Y] / 2.0f;
+    float cx2 = std::get<X>(p2) + d2[X] / 2.0f;
+    float cy2 = std::get<Y>(p2) + d2[Y] / 2.0f;
 
     // Calculate intersection distances using max-min
     float ix = std::max(cx1, cx2) - std::min(cx1, cx2);
     float iy = std::max(cy1, cy2) - std::min(cy1, cy2);
 
     // Check if boxes overlap in both dimensions
-    return ix < (d1[xIndex] + d2[xIndex]) / 2 && 
-           iy < (d1[yIndex] + d2[yIndex]) / 2;
+    return ix < (d1[X] + d2[X]) / 2.0f && 
+           iy < (d1[Y] + d2[Y]) / 2.0f;
+}
+
+bool rectIntersect(const Item& item1, const Item& item2, Axis x, Axis y) {
+    if (x == Axis::width && y == Axis::height) {
+        return rectIntersectImpl<0, 1>(item1, item2);
+    } else if (x == Axis::height && y == Axis::depth) {
+        return rectIntersectImpl<1, 2>(item1, item2);
+    } else if (x == Axis::width && y == Axis::depth) {
+        return rectIntersectImpl<0, 2>(item1, item2);
+    }
+    return false;
 }
 
 bool Item::doesIntersect(const Item& other) const {

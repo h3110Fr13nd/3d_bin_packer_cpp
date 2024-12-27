@@ -20,7 +20,7 @@ void runTest(const std::string& testName, const std::vector<Bin>& bins, const st
     }
 }
 
-int main() {
+long main() {
     std::vector<std::tuple<std::string, std::vector<Bin>, std::vector<Item>, std::function<bool(const Packer&)>>> testDatas = {
         {
             "Edge case that needs rotation.",

@@ -44,9 +44,9 @@ class Item : public Box {
 public:
     // Single constructor with default arguments
     Item(const std::string& name, 
-         float w, 
-         float h, 
-         float d,
+         long w, 
+         long h, 
+         long d,
          const std::vector<RotationType>& allowed_rotations = {},
          const std::string& color = "#000000");
 
@@ -54,12 +54,12 @@ public:
     RotationType getRotationType() const;
     void setRotationType(RotationType type);
 
-    const std::vector<float>& getPosition() const;
-    void setPosition(const std::vector<float>& position);
+    const std::tuple<long, long, long>& getPosition() const;
+    void setPosition(const std::tuple<long, long, long>& position);
 
     std::string getRotationTypeString() const;
-    std::vector<float> getDimension() const;
-    std::vector<float> getPos() const;
+    std::vector<long> getDimension() const;
+    std::vector<long> getPos() const;
 
     bool doesIntersect(const Item& other) const;
 
@@ -67,7 +67,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Item& item);
     std::vector<RotationType> _allowed_rotations;
-    std::vector<float> _position;
+    std::tuple<long, long, long> _position;
     RotationType _rotation_type;
     std::string color;
 

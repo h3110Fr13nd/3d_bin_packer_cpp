@@ -7,14 +7,14 @@
 
 class Bin : public Box {
 public:
-    Bin(const std::string& name, float w, float h, float d);
+    Bin(const std::string& name, long w, long h, long d);
     
     const std::vector<std::reference_wrapper<Item>>& getItems() const;
     void setItems(const std::vector<std::reference_wrapper<Item>>& items);
 
-    float scoreRotation(const Item& item, int rotationType) const;
-    std::vector<int> getBestRotationOrder(const Item& item) const;
-    bool putItem(Item& item, const std::tuple<float, float, float>& p);
+    float scoreRotation(const Item& item, long rotationType) const;
+    std::vector<long> getBestRotationOrder(const Item& item) const;
+    bool putItem(Item& item, const std::tuple<long, long, long>& p);
 
     void addItem(Item& item);
 

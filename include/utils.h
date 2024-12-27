@@ -3,7 +3,7 @@
 
 // ...existing code...
 
-int factored_integer(double value);
+long factored_integer(double value);
 
 // ...existing code...
 
