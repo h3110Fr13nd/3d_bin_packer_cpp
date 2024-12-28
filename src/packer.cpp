@@ -72,10 +72,6 @@ std::vector<Item> Packer::packToBin(Bin& bin, std::vector<Item>& items) {
             if (fitted) break;
             for (const auto& item_b : bin.getItems()) {
                 std::tuple<long, long, long> item_position;
-                std::cout << "Trying to fit item at position: (" 
-                          << std::get<0>(item_b.get().getPosition()) << ", " 
-                          << std::get<1>(item_b.get().getPosition()) << ", " 
-                          << std::get<2>(item_b.get().getPosition()) << ")" << std::endl;
                 if (axis == Axis::width) {
                     item_position = {std::get<0>(item_b.get().getPosition()) + item_b.get().getDimension()[0], std::get<1>(item_b.get().getPosition()), std::get<2>(item_b.get().getPosition())};
                 } else if (axis == Axis::depth) {
@@ -128,6 +124,6 @@ void Packer::pack() {
             continue;
         }
         auto unpacked_items = packToBin(bin->get(), items);
-        items = std::move(unpacked_items);
+        items = unpacked_items;
     }
 }

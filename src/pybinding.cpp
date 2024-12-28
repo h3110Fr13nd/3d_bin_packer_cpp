@@ -49,6 +49,7 @@ PYBIND11_MODULE(pybinding, m) {
             return new Item(name, w, h, d, rotations, color);
         }))
         .def(py::init<const std::string&, long, long, long, const std::vector<RotationType>&, const std::string&>())
+        .def("get_name", &Item::getName)
         .def("get_allowed_rotations", &Item::getAllowedRotations)
         .def("get_rotation_type", &Item::getRotationType)
         .def("set_rotation_type", &Item::setRotationType)
@@ -68,7 +69,8 @@ PYBIND11_MODULE(pybinding, m) {
         .def_readwrite("height", &Item::height)
         .def_readwrite("depth", &Item::depth)
         .def_readwrite("_allowed_rotations", &Item::_allowed_rotations)
-        .def_readwrite("_position", &Item::_position, py::return_value_policy::reference);
+        .def_readwrite("_position", &Item::_position, py::return_value_policy::reference)
+        .def_readwrite("name", &Item::name, py::return_value_policy::reference);
 
 
     py::class_<Bin, Box>(m, "Bin")
