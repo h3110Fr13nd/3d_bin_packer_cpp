@@ -25,7 +25,6 @@ print("all items:", packer.get_items())
 for bin_ in packer.get_bins():
     print("items in bin:", bin_.get_items(), len(bin_.get_items()))
     for i, item in enumerate(bin_.get_items()):
-
         # print("item position:", item.get_position(), type(item.get_position()))
         print("item position", i, item.name, item.get_position())
 

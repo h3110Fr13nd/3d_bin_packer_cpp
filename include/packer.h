@@ -17,9 +17,9 @@ public:
     void addBin(const Bin& bin);
     void addItem(const Item& item);
     std::optional<std::reference_wrapper<Bin>> findFittedBin(Item& item);
-    std::optional<Bin> getBiggerBinThan(const Bin& other_bin);
-    void unfitItem();
-    std::vector<Item> packToBin(Bin& bin, std::vector<Item>& items);
+    std::optional<std::reference_wrapper<Bin>> getBiggerBinThan(const Bin& other_bin);
+    void unfitItem(std::vector<Item*>& item_ptrs);
+    std::vector<Item*> packToBin(Bin& bin, std::vector<Item*>& item_ptrs);
     void pack();
 
 private:
