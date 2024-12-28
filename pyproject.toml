@@ -9,6 +9,3 @@ dependencies = [
     "pybind11>=2.13.6",
     "setuptools>=75.6.0",
 ]
-
-[tool.uv.sources]
-3d-bin-packer = { path = "../3d-bin-packer-python" }
