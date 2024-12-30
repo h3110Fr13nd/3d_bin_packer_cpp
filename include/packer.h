@@ -21,9 +21,9 @@ public:
     void unfitItem(std::vector<Item*>& item_ptrs);
     std::vector<Item*> packToBin(Bin& bin, std::vector<Item*>& item_ptrs);
     void pack();
+    std::vector<Item> items;
+    std::vector<Bin> bins;
+    std::vector<Item> unfit_items;
 
 private:
-    std::vector<Bin> bins;
-    std::vector<Item> items;
-    std::vector<Item> unfit_items;
 };

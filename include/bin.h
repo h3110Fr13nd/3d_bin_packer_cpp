@@ -7,7 +7,7 @@
 
 class Bin : public Box {
 public:
-    Bin(const std::string& name, long w, long h, long d);
+    Bin(const std::string& name, long w, long h, long d, float max_weight, const std::string& image, const std::string& description, int id);
     
     const std::vector<std::reference_wrapper<Item>>& getItems() const;
     void setItems(const std::vector<std::reference_wrapper<Item>>& items);
@@ -19,7 +19,12 @@ public:
     void addItem(Item& item);
 
     std::string toString() const;
+    
+    int id;
+    float max_weight;
+    std::string image;
+    std::string description;
+    std::vector<std::reference_wrapper<Item>> items;
 
 private:
-    std::vector<std::reference_wrapper<Item>> items;
 };

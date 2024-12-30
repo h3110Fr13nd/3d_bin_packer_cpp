@@ -4,7 +4,7 @@
 // Single constructor without default arguments
 Item::Item(const std::string& name, long w, long h, long d,
            const std::vector<RotationType>& allowed_rotations,
-           const std::string& color)
+           const std::string& color, float weight)
     : Box(name, w, h, d),
       _allowed_rotations(allowed_rotations.empty() ? std::vector<RotationType>{
           RotationType::whd,
@@ -15,7 +15,8 @@ Item::Item(const std::string& name, long w, long h, long d,
           RotationType::wdh
       } : allowed_rotations),
       _rotation_type(_allowed_rotations[0]),
-      color(color.empty() ? "#000000" : color) {
+      color(color.empty() ? "#000000" : color),
+      weight(weight) {
     _position = std::tuple<long, long, long>{0, 0, 0};
 }
 

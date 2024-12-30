@@ -5,8 +5,8 @@
 #include <iostream>
 #include <functional> 
 
-Bin::Bin(const std::string& name, long w, long h, long d) 
-    : Box(name, w, h, d) {
+Bin::Bin(const std::string& name, long w, long h, long d, float max_weight, const std::string& image, const std::string& description, int id) 
+    : Box(name, w, h, d), max_weight(max_weight), image(image), description(description), id(id) {
 }
 
 const std::vector<std::reference_wrapper<Item>>& Bin::getItems() const {

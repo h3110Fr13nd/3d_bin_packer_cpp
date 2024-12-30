@@ -48,7 +48,7 @@ public:
          long h, 
          long d,
          const std::vector<RotationType>& allowed_rotations = {},
-         const std::string& color = "#000000");
+         const std::string& color = "#000000", float weight = 0.0f);
 
     const std::vector<RotationType>& getAllowedRotations() const;
     RotationType getRotationType() const;
@@ -70,6 +70,7 @@ public:
     std::tuple<long, long, long> _position;
     RotationType _rotation_type;
     std::string color;
+    float weight;
 
 private:
 };

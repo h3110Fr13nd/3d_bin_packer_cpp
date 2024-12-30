@@ -68,18 +68,31 @@ PYBIND11_MODULE(pybinding, m) {
         .def_readwrite("width", &Item::width)
         .def_readwrite("height", &Item::height)
         .def_readwrite("depth", &Item::depth)
-        .def_readwrite("_allowed_rotations", &Item::_allowed_rotations)
-        .def_readwrite("_position", &Item::_position, py::return_value_policy::reference)
-        .def_readwrite("name", &Item::name, py::return_value_policy::reference);
+        .def_readwrite("allowed_rotations", &Item::_allowed_rotations)
+        .def_readwrite("position", &Item::_position, py::return_value_policy::reference)
+        .def_readwrite("rotation_type", &Item::_rotation_type)
+        .def_readwrite("name", &Item::name, py::return_value_policy::reference)
+        .def_readwrite("weight", &Item::weight);
 
 
     py::class_<Bin, Box>(m, "Bin")
-        .def(py::init<const std::string&, long, long, long>())
+        .def(py::init<const std::string&, long, long, long, float, const std::string&, const std::string&, int>(),
+             py::arg("name"), py::arg("w"), py::arg("h"), py::arg("d"), py::arg("max_weight") = 0.0f, 
+             py::arg("image") = "", py::arg("description") = "", py::arg("id") = 0)
         .def("get_items", &Bin::getItems)
         .def("set_items", &Bin::setItems)
         .def("score_rotation", &Bin::scoreRotation)
         .def("get_best_rotation_order", &Bin::getBestRotationOrder)
         .def("put_item", &Bin::putItem)
+        .def_readwrite("items", &Bin::items)
+        .def_readwrite("name", &Box::name, py::return_value_policy::reference)
+        .def_readwrite("width", &Box::width)
+        .def_readwrite("height", &Box::height)
+        .def_readwrite("depth", &Box::depth)
+        .def_readwrite("max_weight", &Bin::max_weight)
+        .def_readwrite("image", &Bin::image)
+        .def_readwrite("description", &Bin::description)
+        .def_readwrite("id", &Bin::id)
         .def("to_string", &Bin::toString);
 
     py::class_<Packer>(m, "Packer")
@@ -93,5 +106,8 @@ PYBIND11_MODULE(pybinding, m) {
         .def("get_bigger_bin_than", &Packer::getBiggerBinThan)
         .def("unfit_item", &Packer::unfitItem)
         .def("pack_to_bin", &Packer::packToBin)
-        .def("pack", &Packer::pack);
+        .def("pack", &Packer::pack)
+        .def_readwrite("bins", &Packer::bins)
+        .def_readwrite("items", &Packer::items)
+        .def_readwrite("unfit_items", &Packer::unfit_items);
 }
