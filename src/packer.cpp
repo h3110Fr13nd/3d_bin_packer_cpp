@@ -70,7 +70,11 @@ std::vector<Item*> Packer::packToBin(Bin& bin, std::vector<Item*>& item_ptrs) {
     }
     for (size_t i = 1; i < item_ptrs.size(); ++i) {
         bool fitted = false;
-        for (const auto& axis : {Axis::depth, Axis::width, Axis::height}) {
+        // for (const auto& axis : {Axis::depth, Axis::width, Axis::height}) {
+        // for (const auto& axis : {Axis::width, Axis::height, Axis::depth}) {
+        // for (const auto& axis : {Axis::height, Axis::width, Axis::depth}) {
+        // for (const auto& axis : {Axis::depth, Axis::height, Axis::width}) {
+        for (const auto& axis : {Axis::height, Axis::depth, Axis::width}) {
             if (fitted) break;
             for (const auto& item_b : bin.getItems()) {
                 std::tuple<long, long, long> item_position;
