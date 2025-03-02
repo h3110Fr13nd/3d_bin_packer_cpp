@@ -17,6 +17,9 @@ public:
     bool putItem(Item& item, const std::tuple<long, long, long>& p);
 
     void addItem(Item& item);
+    
+    // Add method to remove an item
+    void removeItem(Item& item);
 
     std::string toString() const;
     

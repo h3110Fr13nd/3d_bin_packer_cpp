@@ -21,6 +21,16 @@ void Bin::addItem(Item& item) {
     items.push_back(std::ref(item));
 }
 
+void Bin::removeItem(Item& item) {
+    auto it = std::find_if(items.begin(), items.end(), [&item](const std::reference_wrapper<Item>& ref) {
+        return &ref.get() == &item;
+    });
+    
+    if (it != items.end()) {
+        items.erase(it);
+    }
+}
+
 float Bin::scoreRotation(const Item& item, long rotationType) const {
     Item rotatedItem = item;
     rotatedItem.setRotationType(static_cast<RotationType>(rotationType));

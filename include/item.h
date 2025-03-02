@@ -42,13 +42,14 @@ inline size_t axisToIndex(Axis axis) {
 
 class Item : public Box {
 public:
-    // Single constructor with default arguments
+    // Updated constructor with stuffing parameters
     Item(const std::string& name, 
          long w, 
          long h, 
          long d,
          const std::vector<RotationType>& allowed_rotations = {},
-         const std::string& color = "#000000", float weight = 0.0f);
+         const std::string& color = "#000000", float weight = 0.0f,
+         int stuffing_layers = 0, float stuffing_max_weight = 0, long stuffing_height = 0);
 
     const std::vector<RotationType>& getAllowedRotations() const;
     RotationType getRotationType() const;
@@ -66,11 +67,23 @@ public:
     bool operator==(const Item& other) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Item& item);
+
+    // New stuffing getter/setter methods
+    int getStuffingLayers() const;
+    void setStuffingLayers(int layers);
+    float getStuffingMaxWeight() const;
+    void setStuffingMaxWeight(float max_weight);
+    long getStuffingHeight() const;
+    void setStuffingHeight(long height);
+
     std::vector<RotationType> _allowed_rotations;
     std::tuple<long, long, long> _position;
     RotationType _rotation_type;
     std::string color;
     float weight;
+    int _stuffing_layers;           // Number of stuffing layers
+    float _stuffing_max_weight;     // Maximum weight for stuffing
+    long _stuffing_height;          // Stuffing height in mm
 
 private:
 };

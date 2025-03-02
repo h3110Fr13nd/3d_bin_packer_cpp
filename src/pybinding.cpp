@@ -48,6 +48,30 @@ PYBIND11_MODULE(pybinding, m) {
                         const std::string& color) {
             return new Item(name, w, h, d, rotations, color);
         }))
+        .def(py::init([](const std::string& name, long w, long h, long d,
+                        const std::vector<RotationType>& rotations,
+                        const std::string& color, float weight) {
+            return new Item(name, w, h, d, rotations, color, weight);
+        }))
+        // Add constructors with stuffing parameters
+        .def(py::init([](const std::string& name, long w, long h, long d,
+                        const std::vector<RotationType>& rotations,
+                        const std::string& color, float weight,
+                        int stuffing_layers) {
+            return new Item(name, w, h, d, rotations, color, weight, stuffing_layers);
+        }))
+        .def(py::init([](const std::string& name, long w, long h, long d,
+                        const std::vector<RotationType>& rotations,
+                        const std::string& color, float weight,
+                        int stuffing_layers, float stuffing_max_weight) {
+            return new Item(name, w, h, d, rotations, color, weight, stuffing_layers, stuffing_max_weight);
+        }))
+        .def(py::init([](const std::string& name, long w, long h, long d,
+                        const std::vector<RotationType>& rotations,
+                        const std::string& color, float weight,
+                        int stuffing_layers, float stuffing_max_weight, long stuffing_height) {
+            return new Item(name, w, h, d, rotations, color, weight, stuffing_layers, stuffing_max_weight, stuffing_height);
+        }))
         .def(py::init<const std::string&, long, long, long, const std::vector<RotationType>&, const std::string&>())
         .def("get_name", &Item::getName)
         .def("get_allowed_rotations", &Item::getAllowedRotations)
@@ -58,6 +82,13 @@ PYBIND11_MODULE(pybinding, m) {
         .def("get_rotation_type_string", &Item::getRotationTypeString)
         .def("get_dimension", &Item::getDimension)
         .def("does_intersect", &Item::doesIntersect)
+        // Add stuffing getter/setter methods
+        .def("get_stuffing_layers", &Item::getStuffingLayers)
+        .def("set_stuffing_layers", &Item::setStuffingLayers)
+        .def("get_stuffing_max_weight", &Item::getStuffingMaxWeight)
+        .def("set_stuffing_max_weight", &Item::setStuffingMaxWeight)
+        .def("get_stuffing_height", &Item::getStuffingHeight)
+        .def("set_stuffing_height", &Item::setStuffingHeight)
         .def(py::self == py::self)
         .def("__str__", [](const Item &item) {
             std::ostringstream oss;
@@ -72,7 +103,11 @@ PYBIND11_MODULE(pybinding, m) {
         .def_readwrite("position", &Item::_position, py::return_value_policy::reference)
         .def_readwrite("rotation_type", &Item::_rotation_type)
         .def_readwrite("name", &Item::name, py::return_value_policy::reference)
-        .def_readwrite("weight", &Item::weight);
+        .def_readwrite("weight", &Item::weight)
+        // Add stuffing properties
+        .def_readwrite("stuffing_layers", &Item::_stuffing_layers)
+        .def_readwrite("stuffing_max_weight", &Item::_stuffing_max_weight)
+        .def_readwrite("stuffing_height", &Item::_stuffing_height);
 
 
     py::class_<Bin, Box>(m, "Bin")

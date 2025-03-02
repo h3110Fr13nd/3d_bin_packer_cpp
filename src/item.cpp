@@ -4,7 +4,8 @@
 // Single constructor without default arguments
 Item::Item(const std::string& name, long w, long h, long d,
            const std::vector<RotationType>& allowed_rotations,
-           const std::string& color, float weight)
+           const std::string& color, float weight,
+           int stuffing_layers, float stuffing_max_weight, long stuffing_height)
     : Box(name, w, h, d),
       _allowed_rotations(allowed_rotations.empty() ? std::vector<RotationType>{
           RotationType::whd,
@@ -16,7 +17,10 @@ Item::Item(const std::string& name, long w, long h, long d,
       } : allowed_rotations),
       _rotation_type(_allowed_rotations[0]),
       color(color.empty() ? "#000000" : color),
-      weight(weight) {
+      weight(weight),
+      _stuffing_layers(stuffing_layers),
+      _stuffing_max_weight(stuffing_max_weight),
+      _stuffing_height(stuffing_height) {
     _position = std::tuple<long, long, long>{0, 0, 0};
 }
 
@@ -113,4 +117,28 @@ std::ostream& operator<<(std::ostream& os, const Item& item) {
     const auto& dim = item.getDimension();
     os << dim[0] << " x " << dim[1] << " x " << dim[2] << ")";
     return os;
+}
+
+int Item::getStuffingLayers() const {
+    return _stuffing_layers;
+}
+
+void Item::setStuffingLayers(int layers) {
+    _stuffing_layers = layers;
+}
+
+float Item::getStuffingMaxWeight() const {
+    return _stuffing_max_weight;
+}
+
+void Item::setStuffingMaxWeight(float max_weight) {
+    _stuffing_max_weight = max_weight;
+}
+
+long Item::getStuffingHeight() const {
+    return _stuffing_height;
+}
+
+void Item::setStuffingHeight(long height) {
+    _stuffing_height = height;
 }

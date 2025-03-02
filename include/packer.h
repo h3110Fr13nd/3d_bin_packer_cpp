@@ -21,9 +21,16 @@ public:
     void unfitItem(std::vector<Item*>& item_ptrs);
     std::vector<Item*> packToBin(Bin& bin, std::vector<Item*>& item_ptrs);
     void pack();
+    
+    // Public data members
     std::vector<Item> items;
     std::vector<Bin> bins;
     std::vector<Item> unfit_items;
-
+    
 private:
+    // Check if item's stuffing constraints are satisfied in this position
+    bool checkStuffingConstraints(const Bin& bin, const Item& item, const std::tuple<long, long, long>& position);
+    
+    // Check if placing this item would violate constraints of items below it
+    bool wouldViolateExistingItemConstraints(const Bin& bin, const Item& new_item, const std::tuple<long, long, long>& new_position);
 };
