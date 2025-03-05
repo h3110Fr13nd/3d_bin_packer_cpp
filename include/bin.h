@@ -1,33 +1,14 @@
-#pragma once
-#include <vector>
-#include <string>
-#include <functional>  // Include for std::reference_wrapper
-#include "box.h"
-#include "item.h"
+// This file is intentionally left empty to avoid duplicate class definition
+// All Bin class functionality is now defined in src/bin.h
+#ifndef INCLUDE_BIN_H_EMPTY
+#define INCLUDE_BIN_H_EMPTY
+// This file intentionally left empty
+#endif // INCLUDE_BIN_H_EMPTY
+// Redirect to the primary bin.h file in the src directory
+#ifndef INCLUDE_BIN_H_REDIRECT
+#define INCLUDE_BIN_H_REDIRECT
 
-class Bin : public Box {
-public:
-    Bin(const std::string& name, long w, long h, long d, float max_weight, const std::string& image, const std::string& description, int id);
-    
-    const std::vector<std::reference_wrapper<Item>>& getItems() const;
-    void setItems(const std::vector<std::reference_wrapper<Item>>& items);
+// Include the actual implementation from src directory
+#include "../src/bin.h"
 
-    float scoreRotation(const Item& item, long rotationType) const;
-    std::vector<long> getBestRotationOrder(const Item& item) const;
-    bool putItem(Item& item, const std::tuple<long, long, long>& p);
-
-    void addItem(Item& item);
-    
-    // Add method to remove an item
-    void removeItem(Item& item);
-
-    std::string toString() const;
-    
-    int id;
-    float max_weight;
-    std::string image;
-    std::string description;
-    std::vector<std::reference_wrapper<Item>> items;
-
-private:
-};
+#endif // INCLUDE_BIN_H_REDIRECT

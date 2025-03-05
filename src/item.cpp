@@ -142,3 +142,24 @@ long Item::getStuffingHeight() const {
 void Item::setStuffingHeight(long height) {
     _stuffing_height = height;
 }
+
+bool Item::isHeightConstrained() const {
+    return height_constrained;
+}
+
+void Item::setHeightConstraint(bool value, long heightValue) {
+    height_constrained = value;
+    height_constraint_value = heightValue;
+}
+
+long Item::getHeightConstraintValue() const {
+    return height_constraint_value;
+}
+
+HeightConstraintType Item::getHeightConstraintType() const {
+    return height_constraint_type;
+}
+
+void Item::setHeightConstraintType(HeightConstraintType type) {
+    height_constraint_type = type;
+}

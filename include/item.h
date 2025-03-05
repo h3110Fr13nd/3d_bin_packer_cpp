@@ -22,6 +22,11 @@ enum class Axis {
     depth
 };
 
+enum class HeightConstraintType {
+    MAXIMUM, // Height is a maximum value
+    EXACT    // Height must be exactly filled
+};
+
 const std::map<RotationType, std::string> ROTATION_TYPE_STRINGS = {
     {RotationType::whd, "(w, h, d)"},
     {RotationType::hwd, "(h, w, d)"},
@@ -76,6 +81,12 @@ public:
     long getStuffingHeight() const;
     void setStuffingHeight(long height);
 
+    bool isHeightConstrained() const;
+    void setHeightConstraint(bool value, long heightValue);
+    long getHeightConstraintValue() const;
+    HeightConstraintType getHeightConstraintType() const;
+    void setHeightConstraintType(HeightConstraintType type);
+
     std::vector<RotationType> _allowed_rotations;
     std::tuple<long, long, long> _position;
     RotationType _rotation_type;
@@ -86,6 +97,9 @@ public:
     long _stuffing_height;          // Stuffing height in mm
 
 private:
+    bool height_constrained = false;
+    long height_constraint_value = 0;
+    HeightConstraintType height_constraint_type = HeightConstraintType::MAXIMUM;
 };
 
 bool rectIntersect(const Item& item1, const Item& item2, Axis x, Axis y);

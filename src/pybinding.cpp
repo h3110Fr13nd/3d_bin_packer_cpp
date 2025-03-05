@@ -4,8 +4,10 @@
 #include <sstream>
 #include "box.h"
 #include "item.h"
+// Make sure we're including the correct bin.h
 #include "bin.h"
-#include "packer.h"
+// Ensure packer.h is included from the right path
+#include "../include/packer.h" // or "packer.h" if in the same directory
 
 namespace py = pybind11;
 
@@ -107,8 +109,19 @@ PYBIND11_MODULE(pybinding, m) {
         // Add stuffing properties
         .def_readwrite("stuffing_layers", &Item::_stuffing_layers)
         .def_readwrite("stuffing_max_weight", &Item::_stuffing_max_weight)
-        .def_readwrite("stuffing_height", &Item::_stuffing_height);
-
+        .def_readwrite("stuffing_height", &Item::_stuffing_height)
+        // Add height constraint methods
+        .def("is_height_constrained", &Item::isHeightConstrained)
+        .def("set_height_constraint", &Item::setHeightConstraint)
+        .def("get_height_constraint_value", &Item::getHeightConstraintValue)
+        .def("set_height_constraint_type", [](Item& item, int type) {
+            HeightConstraintType constraintType = (type == 1) ? 
+                HeightConstraintType::EXACT : HeightConstraintType::MAXIMUM;
+            item.setHeightConstraintType(constraintType);
+        })
+        .def("get_height_constraint_type", [](const Item& item) {
+            return static_cast<int>(item.getHeightConstraintType());
+        });
 
     py::class_<Bin, Box>(m, "Bin")
         .def(py::init<const std::string&, long, long, long, float, const std::string&, const std::string&, int>(),
@@ -119,6 +132,8 @@ PYBIND11_MODULE(pybinding, m) {
         .def("score_rotation", &Bin::scoreRotation)
         .def("get_best_rotation_order", &Bin::getBestRotationOrder)
         .def("put_item", &Bin::putItem)
+        .def("add_item", &Bin::addItem)
+        .def("remove_item", &Bin::removeItem)
         .def_readwrite("items", &Bin::items)
         .def_readwrite("name", &Box::name, py::return_value_policy::reference)
         .def_readwrite("width", &Box::width)

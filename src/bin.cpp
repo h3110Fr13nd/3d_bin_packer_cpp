@@ -13,27 +13,29 @@ const std::vector<std::reference_wrapper<Item>>& Bin::getItems() const {
     return items;
 }
 
-void Bin::setItems(const std::vector<std::reference_wrapper<Item>>& items) {
-    this->items = items;
+void Bin::setItems(const std::vector<std::reference_wrapper<Item>>& new_items) {
+    this->items = new_items;
 }
 
 void Bin::addItem(Item& item) {
     items.push_back(std::ref(item));
 }
 
-void Bin::removeItem(Item& item) {
+bool Bin::removeItem(Item& item) {
     auto it = std::find_if(items.begin(), items.end(), [&item](const std::reference_wrapper<Item>& ref) {
         return &ref.get() == &item;
     });
     
     if (it != items.end()) {
         items.erase(it);
+        return true;
     }
+    return false;
 }
 
-float Bin::scoreRotation(const Item& item, long rotationType) const {
+float Bin::scoreRotation(const Item& item, const std::tuple<long, long, long>& position, RotationType rotation_type) const {
     Item rotatedItem = item;
-    rotatedItem.setRotationType(static_cast<RotationType>(rotationType));
+    rotatedItem.setRotationType(rotation_type);
     auto d = rotatedItem.getDimension();
 
     if (getWidth() < d[0] || getHeight() < d[1] || getDepth() < d[2]) {
@@ -47,66 +49,90 @@ float Bin::scoreRotation(const Item& item, long rotationType) const {
     return score;
 }
 
-std::vector<long> Bin::getBestRotationOrder(const Item& item) const {
+RotationType Bin::getBestRotationOrder(const Item& item, const std::tuple<long, long, long>& position) const {
     // Use map to maintain same structure as Python dictionary
-    std::map<long, float> rotationScores;
+    std::map<RotationType, float> rotationScores;
+    
     // Score all rotation types
     for (auto rotation : item.getAllowedRotations()) {
-        // Explicitly cast RotationType to long for map key
-        long rotationInt = static_cast<long>(rotation);
-        rotationScores[rotationInt] = scoreRotation(item, rotationInt);
+        rotationScores[rotation] = scoreRotation(item, position, rotation);
     }
     
-    // Convert map to vector for sorting
-    std::vector<long> bestRotations;
-    bestRotations.reserve(rotationScores.size());
+    // Find rotation with highest score
+    RotationType bestRotation = item.getAllowedRotations()[0]; // Default to first allowed rotation
+    float bestScore = 0;
     
-    // Extract keys and sort them based on their corresponding values
-    for (const auto& [rotation, _] : rotationScores) {
-        bestRotations.push_back(rotation);
+    for (const auto& [rotation, score] : rotationScores) {
+        if (score > bestScore) {
+            bestScore = score;
+            bestRotation = rotation;
+        }
     }
     
-    std::sort(bestRotations.begin(), bestRotations.end(),
-              [&rotationScores](long a, long b) {
-                  return rotationScores[a] > rotationScores[b];
-              });
-    
-    return bestRotations;
+    return bestRotation;
 }
 
 bool Bin::putItem(Item& item, const std::tuple<long, long, long>& p) {
     bool fit = false;
-    auto rotations = getBestRotationOrder(item);
+    RotationType bestRotation = getBestRotationOrder(item, p);
 
     item.setPosition({std::get<0>(p), std::get<1>(p), std::get<2>(p)});
-    for (long rotation : rotations) {
-        item.setRotationType(static_cast<RotationType>(rotation));
-        auto d = item.getDimension();
+    item.setRotationType(bestRotation);
+    auto d = item.getDimension();
 
-        if (getWidth() < std::get<0>(p) + d[0] || 
-            getHeight() < std::get<1>(p) + d[1] || 
-            getDepth() < std::get<2>(p) + d[2]) {
-            fit = false;
-        } else {
-            fit = true;
-            for (const auto& otherItem : items) {
-                if (otherItem.get().doesIntersect(item)) {
-                    fit = false;
-                    break;
-                }
-            }
-
-            if (fit) {
-                items.push_back(std::ref(item));
+    if (getWidth() < std::get<0>(p) + d[0] || 
+        getHeight() < std::get<1>(p) + d[1] || 
+        getDepth() < std::get<2>(p) + d[2]) {
+        fit = false;
+    } else {
+        fit = true;
+        for (const auto& otherItem : items) {
+            if (otherItem.get().doesIntersect(item)) {
+                fit = false;
+                break;
             }
         }
 
         if (fit) {
-            break;
+            items.push_back(std::ref(item));
         }
     }
 
     return fit;
+}
+
+bool Bin::canItemFit(const Item& item, const std::tuple<long, long, long>& position) const {
+    // Get item dimensions 
+    const auto& item_dim = item.getDimension();
+    
+    // Check if the item fits within bin boundaries
+    if (std::get<0>(position) + item_dim[0] > width ||
+        std::get<1>(position) + item_dim[1] > height ||
+        std::get<2>(position) + item_dim[2] > depth) {
+        return false;
+    }
+    
+    // Check if item exceeds weight limit
+    float total_weight = 0.0f;
+    for (const auto& existing_item : items) {
+        total_weight += existing_item.get().weight;
+    }
+    
+    if (max_weight > 0 && total_weight + item.weight > max_weight) {
+        return false;
+    }
+    
+    // Check for intersections with existing items
+    Item temp_item = item;  // Create a temporary copy to check placement
+    temp_item.setPosition(position);
+    
+    for (const auto& existing_item : items) {
+        if (temp_item.doesIntersect(existing_item)) {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 std::string Bin::toString() const {
