@@ -76,9 +76,14 @@ bool Packer::isItemDirectlyAbove(const Item& bottom_item, const Item& top_item, 
 
 // Helper function to check if stuffing constraints are satisfied
 bool Packer::checkStuffingConstraints(const Bin& bin, const Item& item, const std::tuple<long, long, long>& position) {
+    // Check if item is bottom-load-only and is not placed at the bottom
+    if (item.isBottomLoadOnlyEnabled() && std::get<1>(position) > 0) {
+        return false;  // Bottom-load-only item must be placed at y=0 (bottom)
+    }
+
     // If no stuffing requirements, quickly return true
     if (item.getStuffingLayers() <= 0 && item.getStuffingMaxWeight() <= 0 && 
-        item.getStuffingHeight() <= 0 && !item.isHeightConstrained()) {
+        item.getStuffingHeight() <= 0 && !item.isHeightConstrained() && !item.isDisableStackingEnabled()) {
         return true;
     }
     
@@ -89,8 +94,9 @@ bool Packer::checkStuffingConstraints(const Bin& bin, const Item& item, const st
     // Check height constraint for both stuffing height and direct height constraint
     long top_of_item = std::get<1>(position) + item_dim[1];
     
-    // If height is constrained (isHeight=true), ensure nothing is stacked above this item
-    if (item.isHeightConstrained()) {
+    // If height is constrained (isHeight=true) or disable_stacking is true, 
+    // ensure nothing is stacked above this item
+    if (item.isHeightConstrained() || item.isDisableStackingEnabled()) {
         for (const auto& other_item : bin.getItems()) {
             // Skip comparing with itself
             if (&other_item.get() == &item) {
@@ -98,7 +104,7 @@ bool Packer::checkStuffingConstraints(const Bin& bin, const Item& item, const st
             }
             
             if (isItemDirectlyAbove(item, other_item.get(), 0.1f)) { // Even small overlap should prevent stacking
-                // If item is height constrained, no items should be above it
+                // If item is height constrained or has disable_stacking, no items should be above it
                 return false;
             }
         }
@@ -231,6 +237,22 @@ bool Packer::wouldViolateExistingItemConstraints(const Bin& bin, const Item& new
             if (std::get<1>(new_position) >= std::get<1>(existing_pos) + existing_dim[1] &&
                 area_overlap > 0) {
                 return true; // Cannot place items above height-constrained items
+            }
+        }
+        
+        // Check if existing item has disable_stacking enabled
+        if (existing_item.get().isDisableStackingEnabled()) {
+            // Check if new item would be above existing item with any overlap
+            const auto& existing_pos = existing_item.get().getPosition();
+            const auto& existing_dim = existing_item.get().getDimension();
+            
+            // Calculate overlap area
+            float area_overlap = calculateItemOverlap(existing_pos, existing_dim, new_position, new_dim);
+            
+            // If new item would be placed above a disable-stacking item (with ANY overlap), return true
+            if (std::get<1>(new_position) >= std::get<1>(existing_pos) + existing_dim[1] &&
+                area_overlap > 0) {
+                return true; // Cannot place items above disable-stacking items
             }
         }
         

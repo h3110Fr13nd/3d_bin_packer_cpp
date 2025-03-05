@@ -75,6 +75,14 @@ PYBIND11_MODULE(pybinding, m) {
             return new Item(name, w, h, d, rotations, color, weight, stuffing_layers, stuffing_max_weight, stuffing_height);
         }))
         .def(py::init<const std::string&, long, long, long, const std::vector<RotationType>&, const std::string&>())
+        .def(py::init([](const std::string& name, long w, long h, long d,
+                        const std::vector<RotationType>& rotations,
+                        const std::string& color, float weight,
+                        int stuffing_layers, float stuffing_max_weight, long stuffing_height,
+                        bool bottom_load_only, bool disable_stacking) {
+            return new Item(name, w, h, d, rotations, color, weight, stuffing_layers, 
+                          stuffing_max_weight, stuffing_height, bottom_load_only, disable_stacking);
+        }))
         .def("get_name", &Item::getName)
         .def("get_allowed_rotations", &Item::getAllowedRotations)
         .def("get_rotation_type", &Item::getRotationType)
@@ -91,6 +99,10 @@ PYBIND11_MODULE(pybinding, m) {
         .def("set_stuffing_max_weight", &Item::setStuffingMaxWeight)
         .def("get_stuffing_height", &Item::getStuffingHeight)
         .def("set_stuffing_height", &Item::setStuffingHeight)
+        .def("is_bottom_load_only", &Item::isBottomLoadOnlyEnabled)
+        .def("set_bottom_load_only", &Item::setBottomLoadOnly)
+        .def("is_disable_stacking", &Item::isDisableStackingEnabled)
+        .def("set_disable_stacking", &Item::setDisableStacking)
         .def(py::self == py::self)
         .def("__str__", [](const Item &item) {
             std::ostringstream oss;

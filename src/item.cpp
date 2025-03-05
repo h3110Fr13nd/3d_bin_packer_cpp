@@ -1,11 +1,12 @@
 #include "item.h"
 #include <iostream>
 
-// Single constructor without default arguments
+// Update constructor with new parameters
 Item::Item(const std::string& name, long w, long h, long d,
            const std::vector<RotationType>& allowed_rotations,
            const std::string& color, float weight,
-           int stuffing_layers, float stuffing_max_weight, long stuffing_height)
+           int stuffing_layers, float stuffing_max_weight, long stuffing_height,
+           bool bottom_load_only, bool disable_stacking)
     : Box(name, w, h, d),
       _allowed_rotations(allowed_rotations.empty() ? std::vector<RotationType>{
           RotationType::whd,
@@ -20,7 +21,9 @@ Item::Item(const std::string& name, long w, long h, long d,
       weight(weight),
       _stuffing_layers(stuffing_layers),
       _stuffing_max_weight(stuffing_max_weight),
-      _stuffing_height(stuffing_height) {
+      _stuffing_height(stuffing_height),
+      bottom_load_only(bottom_load_only),
+      disable_stacking(disable_stacking) {
     _position = std::tuple<long, long, long>{0, 0, 0};
 }
 
@@ -162,4 +165,21 @@ HeightConstraintType Item::getHeightConstraintType() const {
 
 void Item::setHeightConstraintType(HeightConstraintType type) {
     height_constraint_type = type;
+}
+
+// Add implementations for the new methods
+bool Item::isBottomLoadOnlyEnabled() const {
+    return bottom_load_only;
+}
+
+void Item::setBottomLoadOnly(bool value) {
+    bottom_load_only = value;
+}
+
+bool Item::isDisableStackingEnabled() const {
+    return disable_stacking;
+}
+
+void Item::setDisableStacking(bool value) {
+    disable_stacking = value;
 }

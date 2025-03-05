@@ -47,14 +47,15 @@ inline size_t axisToIndex(Axis axis) {
 
 class Item : public Box {
 public:
-    // Updated constructor with stuffing parameters
+    // Updated constructor with stuffing parameters and new constraints
     Item(const std::string& name, 
          long w, 
          long h, 
          long d,
          const std::vector<RotationType>& allowed_rotations = {},
          const std::string& color = "#000000", float weight = 0.0f,
-         int stuffing_layers = 0, float stuffing_max_weight = 0, long stuffing_height = 0);
+         int stuffing_layers = 0, float stuffing_max_weight = 0, long stuffing_height = 0,
+         bool bottom_load_only = false, bool disable_stacking = false);
 
     const std::vector<RotationType>& getAllowedRotations() const;
     RotationType getRotationType() const;
@@ -87,6 +88,12 @@ public:
     HeightConstraintType getHeightConstraintType() const;
     void setHeightConstraintType(HeightConstraintType type);
 
+    // New constraint getter/setter methods
+    bool isBottomLoadOnlyEnabled() const;
+    void setBottomLoadOnly(bool value);
+    bool isDisableStackingEnabled() const;
+    void setDisableStacking(bool value);
+
     std::vector<RotationType> _allowed_rotations;
     std::tuple<long, long, long> _position;
     RotationType _rotation_type;
@@ -100,6 +107,8 @@ private:
     bool height_constrained = false;
     long height_constraint_value = 0;
     HeightConstraintType height_constraint_type = HeightConstraintType::MAXIMUM;
+    bool bottom_load_only = false;  // New: item must be placed at the bottom of the container
+    bool disable_stacking = false;  // New: nothing can be stacked on top of this item
 };
 
 bool rectIntersect(const Item& item1, const Item& item2, Axis x, Axis y);
