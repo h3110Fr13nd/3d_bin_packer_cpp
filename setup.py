@@ -23,6 +23,7 @@ setup(
     author='Vijay Singh Kushwaha',
     author_email='vijaysinghkushwaha3737@gmail.com',
     description='A 3D bin packing library',
+    license='MIT',
     ext_modules=ext_modules,
     install_requires=['pybind11>=2.5.0'],
 )

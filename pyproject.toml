@@ -3,6 +3,7 @@ name = "3d-bin-packer-cpp"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.12"
 dependencies = [
     "setuptools>=75.6.0",
