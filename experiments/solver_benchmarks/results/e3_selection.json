@@ -1,0 +1,56 @@
+[
+ {
+  "seed": 0,
+  "offered": 14734,
+  "heuristic": 6178,
+  "heuristic_s": 0.13,
+  "ip_upper_bound": 7857,
+  "ip_then_pack": 6916,
+  "ip_then_pack_s": 0.89
+ },
+ {
+  "seed": 1,
+  "offered": 17557,
+  "heuristic": 7552,
+  "heuristic_s": 0.15,
+  "ip_upper_bound": 9810,
+  "ip_then_pack": 8252,
+  "ip_then_pack_s": 0.26
+ },
+ {
+  "seed": 2,
+  "offered": 12731,
+  "heuristic": 6641,
+  "heuristic_s": 0.09,
+  "ip_upper_bound": 7975,
+  "ip_then_pack": 6640,
+  "ip_then_pack_s": 0.41
+ },
+ {
+  "seed": 3,
+  "offered": 13497,
+  "heuristic": 7641,
+  "heuristic_s": 0.14,
+  "ip_upper_bound": 9603,
+  "ip_then_pack": 7790,
+  "ip_then_pack_s": 0.32
+ },
+ {
+  "seed": 4,
+  "offered": 16796,
+  "heuristic": 7729,
+  "heuristic_s": 0.08,
+  "ip_upper_bound": 9553,
+  "ip_then_pack": 8281,
+  "ip_then_pack_s": 0.21
+ },
+ {
+  "seed": 5,
+  "offered": 13499,
+  "heuristic": 6695,
+  "heuristic_s": 0.07,
+  "ip_upper_bound": 8084,
+  "ip_then_pack": 7119,
+  "ip_then_pack_s": 0.43
+ }
+]

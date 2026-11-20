@@ -1,0 +1,4 @@
+# Benchmarks only - not dependencies of the library.
+ortools>=9.10      # CP-SAT, SCIP, CBC, HiGHS via pywraplp (Apache 2.0)
+pulp>=4.0          # modelling layer (MIT); uses highspy below
+highspy>=1.7       # HiGHS (MIT) for PuLP - cannot share a process with ortools

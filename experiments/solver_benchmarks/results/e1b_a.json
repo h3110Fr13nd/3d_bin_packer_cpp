@@ -1,0 +1,46 @@
+[
+ {
+  "part": "a",
+  "n": 20,
+  "engine_util": 0.791,
+  "cpsat_hint_util": 0.868,
+  "cpsat_s": 10.0,
+  "total_s_incl_model": 10.0,
+  "pairs": 190,
+  "rss_mb": 151.0,
+  "rss_growth_mb": 63.0
+ },
+ {
+  "part": "a",
+  "n": 40,
+  "engine_util": 0.826,
+  "cpsat_hint_util": 0.86,
+  "cpsat_s": 10.0,
+  "total_s_incl_model": 10.1,
+  "pairs": 780,
+  "rss_mb": 191.0,
+  "rss_growth_mb": 40.0
+ },
+ {
+  "part": "a",
+  "n": 80,
+  "engine_util": 0.784,
+  "cpsat_hint_util": 0.802,
+  "cpsat_s": 10.0,
+  "total_s_incl_model": 10.3,
+  "pairs": 3160,
+  "rss_mb": 325.0,
+  "rss_growth_mb": 134.0
+ },
+ {
+  "part": "a",
+  "n": 160,
+  "engine_util": 0.801,
+  "cpsat_hint_util": 0.0,
+  "cpsat_s": 10.1,
+  "total_s_incl_model": 11.7,
+  "pairs": 12720,
+  "rss_mb": 491.0,
+  "rss_growth_mb": 166.0
+ }
+]

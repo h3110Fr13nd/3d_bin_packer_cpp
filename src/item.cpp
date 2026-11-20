@@ -1,4 +1,5 @@
 #include "item.h"
+#include <algorithm>
 #include <iostream>
 
 // Update constructor with new parameters
@@ -6,7 +7,8 @@ Item::Item(const std::string& name, long w, long h, long d,
            const std::vector<RotationType>& allowed_rotations,
            const std::string& color, float weight,
            int stuffing_layers, float stuffing_max_weight, long stuffing_height,
-           bool bottom_load_only, bool disable_stacking)
+           bool bottom_load_only, bool disable_stacking, bool upright,
+           float value, int priority, const std::string& group, Shape shape, bool crate_required)
     : Box(name, w, h, d),
       _allowed_rotations(allowed_rotations.empty() ? std::vector<RotationType>{
           RotationType::whd,
@@ -23,7 +25,13 @@ Item::Item(const std::string& name, long w, long h, long d,
       _stuffing_max_weight(stuffing_max_weight),
       _stuffing_height(stuffing_height),
       bottom_load_only(bottom_load_only),
-      disable_stacking(disable_stacking) {
+      disable_stacking(disable_stacking),
+      upright(upright) {
+    this->value = value;
+    this->priority = priority;
+    this->group = group;
+    this->shape = shape;
+    this->crate_required = crate_required;
     _position = std::tuple<long, long, long>{0, 0, 0};
 }
 
@@ -47,27 +55,30 @@ void Item::setPosition(const std::tuple<long, long, long>& position) {
     _position = position;
 }
 
+std::vector<long> Item::getPos() const {
+    return {std::get<0>(_position), std::get<1>(_position), std::get<2>(_position)};
+}
+
 std::string Item::getRotationTypeString() const {
     return ROTATION_TYPE_STRINGS.at(_rotation_type);
 }
 
 std::vector<long> Item::getDimension() const {
-    switch (_rotation_type) {
-        case RotationType::whd:
-            return {width, height, depth};
-        case RotationType::hwd:
-            return {height, width, depth};
-        case RotationType::hdw:
-            return {height, depth, width};
-        case RotationType::dhw:
-            return {depth, height, width};
-        case RotationType::dwh:
-            return {depth, width, height};
-        case RotationType::wdh:
-            return {width, depth, height};
-        default:
-            return {width, height, depth};
+    const auto d = rotatedDimensions(width, height, depth, _rotation_type);
+    return {d[0], d[1], d[2]};
+}
+
+std::vector<RotationType> Item::getEffectiveRotations() const {
+    std::vector<RotationType> result;
+    for (RotationType r : _allowed_rotations) {
+        if (upright && r != RotationType::whd && r != RotationType::dhw) {
+            continue;
+        }
+        if (std::find(result.begin(), result.end(), r) == result.end()) {
+            result.push_back(r);
+        }
     }
+    return result;
 }
 
 template <size_t X, size_t Y>
@@ -182,4 +193,12 @@ bool Item::isDisableStackingEnabled() const {
 
 void Item::setDisableStacking(bool value) {
     disable_stacking = value;
+}
+
+bool Item::isUpright() const {
+    return upright;
+}
+
+void Item::setUpright(bool value) {
+    upright = value;
 }

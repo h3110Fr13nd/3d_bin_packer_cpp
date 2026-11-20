@@ -1,0 +1,107 @@
+[
+ {
+  "problem": "knapsack",
+  "seed": 0,
+  "solver": "cpsat",
+  "value": 7861.1,
+  "ms": 365.4
+ },
+ {
+  "problem": "knapsack",
+  "seed": 0,
+  "solver": "scip",
+  "value": 7861.2,
+  "ms": 280.9
+ },
+ {
+  "problem": "knapsack",
+  "seed": 0,
+  "solver": "cbc",
+  "value": 7861.2,
+  "ms": 63.2
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 0,
+  "solver": "scip",
+  "value": 21150.0,
+  "ms": 6.1
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 0,
+  "solver": "cbc",
+  "value": 21150.0,
+  "ms": 3.5
+ },
+ {
+  "problem": "knapsack",
+  "seed": 1,
+  "solver": "cpsat",
+  "value": 9810.3,
+  "ms": 37.9
+ },
+ {
+  "problem": "knapsack",
+  "seed": 1,
+  "solver": "scip",
+  "value": 9810.4,
+  "ms": 113.0
+ },
+ {
+  "problem": "knapsack",
+  "seed": 1,
+  "solver": "cbc",
+  "value": 9810.4,
+  "ms": 25.2
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 1,
+  "solver": "scip",
+  "value": 27500.0,
+  "ms": 8.1
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 1,
+  "solver": "cbc",
+  "value": 27500.0,
+  "ms": 3.9
+ },
+ {
+  "problem": "knapsack",
+  "seed": 2,
+  "solver": "cpsat",
+  "value": 7985.1,
+  "ms": 31.8
+ },
+ {
+  "problem": "knapsack",
+  "seed": 2,
+  "solver": "scip",
+  "value": 7985.2,
+  "ms": 87.6
+ },
+ {
+  "problem": "knapsack",
+  "seed": 2,
+  "solver": "cbc",
+  "value": 7985.2,
+  "ms": 20.5
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 2,
+  "solver": "scip",
+  "value": 28100.0,
+  "ms": 12.8
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 2,
+  "solver": "cbc",
+  "value": 28100.0,
+  "ms": 3.0
+ }
+]

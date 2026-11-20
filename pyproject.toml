@@ -9,7 +9,11 @@ dependencies = [
     "setuptools>=75.6.0",
     "pybind11>=2.13.6",
     "3d-bin-packer>=0.0.5",
+    "numpy>=1.21",
 ]
+
+[project.optional-dependencies]
+render = ["matplotlib>=3.5"]
 
 [build-system]
 requires = ["setuptools", "pybind11"]

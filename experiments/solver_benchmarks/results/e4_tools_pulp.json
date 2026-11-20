@@ -1,0 +1,44 @@
+[
+ {
+  "problem": "knapsack",
+  "seed": 0,
+  "solver": "pulp_highs",
+  "value": 7861.2,
+  "ms": 658.5
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 0,
+  "solver": "pulp_highs",
+  "value": 21150.0,
+  "ms": 9.5
+ },
+ {
+  "problem": "knapsack",
+  "seed": 1,
+  "solver": "pulp_highs",
+  "value": 9810.4,
+  "ms": 121.2
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 1,
+  "solver": "pulp_highs",
+  "value": 27500.0,
+  "ms": 9.0
+ },
+ {
+  "problem": "knapsack",
+  "seed": 2,
+  "solver": "pulp_highs",
+  "value": 7985.2,
+  "ms": 65.5
+ },
+ {
+  "problem": "fleet_lb",
+  "seed": 2,
+  "solver": "pulp_highs",
+  "value": 28100.0,
+  "ms": 9.8
+ }
+]

@@ -1,12 +1,13 @@
 #include "bin.h"
+#include "loading_sequence.h"
 #include <cmath>
 #include <algorithm>
 #include <sstream>
 #include <iostream>
 #include <functional> 
 
-Bin::Bin(const std::string& name, long w, long h, long d, float max_weight, const std::string& image, const std::string& description, int id) 
-    : Box(name, w, h, d), max_weight(max_weight), image(image), description(description), id(id) {
+Bin::Bin(const std::string& name, long w, long h, long d, float max_weight, const std::string& image, const std::string& description, int id, float cost)
+    : Box(name, w, h, d), max_weight(max_weight), image(image), description(description), id(id), cost(cost) {
 }
 
 const std::vector<std::reference_wrapper<Item>>& Bin::getItems() const {
@@ -139,4 +140,60 @@ std::string Bin::toString() const {
     std::ostringstream oss;
     oss << "Bin: " << getName() << " (W x H x D = " << getWidth() << " x " << getHeight() << " x " << getDepth() << ")";
     return oss.str();
+}
+
+float Bin::getTotalWeight() const {
+    float total = 0.0f;
+    for (const auto& item : items) total += item.get().weight;
+    return total;
+}
+
+long Bin::getPackedVolume() const {
+    long total = 0;
+    for (const auto& item : items) total += item.get().getVolume();
+    return total;
+}
+
+double Bin::getUtilization() const {
+    const long volume = getVolume();
+    return volume > 0 ? static_cast<double>(getPackedVolume()) / static_cast<double>(volume) : 0.0;
+}
+
+namespace {
+std::vector<binpack::SequenceBox> sequenceBoxes(const std::vector<std::reference_wrapper<Item>>& items) {
+    std::vector<binpack::SequenceBox> boxes;
+    boxes.reserve(items.size());
+    for (const auto& ref : items) {
+        const Item& item = ref.get();
+        const auto d = item.getDimension();
+        const auto& p = item.getPosition();
+        binpack::SequenceBox box;
+        box.lo = {static_cast<binpack::coord_t>(std::get<0>(p)), static_cast<binpack::coord_t>(std::get<1>(p)),
+                  static_cast<binpack::coord_t>(std::get<2>(p))};
+        box.hi = {static_cast<binpack::coord_t>(box.lo[0] + d[0]), static_cast<binpack::coord_t>(box.lo[1] + d[1]),
+                  static_cast<binpack::coord_t>(box.lo[2] + d[2])};
+        box.fixed = true;  // a finished layout is never altered
+        boxes.push_back(box);
+    }
+    return boxes;
+}
+}  // namespace
+
+std::vector<std::string> Bin::checkLoadingSequence(LoadingAccess access) const {
+    std::vector<std::string> problems;
+    const auto boxes = sequenceBoxes(items);
+    for (const auto& violation : binpack::checkLoadingSequence(boxes, access)) {
+        problems.push_back(violation.describe() + " (" + items[violation.step].get().getName() + " / " +
+                           items[violation.other].get().getName() + ")");
+    }
+    return problems;
+}
+
+bool Bin::reorderForLoading(LoadingAccess access) {
+    const auto plan = binpack::planLoadingSequence(sequenceBoxes(items), access, FillOrder::BackBottomLeft, 0.0);
+    std::vector<std::reference_wrapper<Item>> ordered;
+    ordered.reserve(items.size());
+    for (std::size_t k : plan.order) ordered.push_back(items[k]);
+    items = std::move(ordered);
+    return plan.feasible;
 }
